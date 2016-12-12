@@ -4,8 +4,10 @@ import Element exposing (..)
 import Html exposing (..)
 import Mouse
 import Svg exposing (..)
+import Svg.Events exposing (onClick)
 import Svg.Attributes exposing (..)
 import VirtualDom
+import Json.Decode as Json
 
 
 type alias Position =
@@ -19,6 +21,7 @@ type alias Model =
 
 type Msg
     = AddClick Position
+    | EventClick
 
 
 model : Model
@@ -30,6 +33,13 @@ model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        EventClick ->
+            let
+                _ =
+                    Debug.log "msg1" "EventClick in Action"
+            in
+                ( model, Cmd.none )
+
         AddClick pos ->
             { model | clicks = pos :: model.clicks } ! []
 
@@ -38,7 +48,7 @@ update msg model =
 -- drawStamp takes a position and return a graphics svg
 
 
-drawStamp : ( Int, Int ) -> Svg msg
+drawStamp : ( Int, Int ) -> Svg Msg
 drawStamp ( x, y ) =
     let
         string_x =
@@ -48,7 +58,7 @@ drawStamp ( x, y ) =
             toString (y)
     in
         Svg.circle
-            [ fill "#60B5CC", fillOpacity "0.5", cx string_x, cy string_y, r "10" ]
+            [ fill "#60B5CC", fillOpacity "0.5", cx string_x, cy string_y, r "30", onClick EventClick ]
             []
 
 
